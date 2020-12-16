@@ -8,11 +8,13 @@ uniform float billowy;
 uniform float tintIntensity;
 uniform vec2 shift;
 uniform vec3 waterColor;
+
 varying vec2 vTextureCoord;
 varying vec2 vFilterCoord;
-varying vec4 vInputSize;
-varying vec4 vOutputFrame;
+
 uniform sampler2D uSampler;
+uniform vec4 inputSize;
+uniform vec4 outputFrame;
 
 const float timeSpeed = 3.;
 
@@ -70,7 +72,7 @@ vec4 water( vec2 fragCoord )
     vec2 p = vec2(result, result2)*0.019 + (cos(uv*1.1 - sin(uv.yx + time*timeSpeed/20.))*0.012);
     uv.x -= shift.x;
     uv.y -= shift.y;
-    vec4 pixel = texture2D( uSampler , ((uv*vOutputFrame.zw)/vInputSize.xy) + (p*billowy) );
+    vec4 pixel = texture2D( uSampler , uv * (outputFrame.zw * inputSize.zw) + p * billowy );
 	return (vec4(result)*0.9 + pixel)*pixel.a;
 }
 
